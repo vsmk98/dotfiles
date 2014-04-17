@@ -1,0 +1,12 @@
+[core]
+	editor = emacs
+[user]
+	name = Szkered
+	email = emperorview@gmail.com
+[credential]
+	helper = osxkeychain
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[push]
+	default = simple
