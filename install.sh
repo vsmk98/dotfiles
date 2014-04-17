@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Fetch
-git clone --recursive https://github.com/Szkered/dotfiles.git ~/.dotfiles
+# git clone --recursive https://github.com/Szkered/dotfiles.git ~/.dotfiles
 
 # Set Flag
 FLAG='-fns'
@@ -9,6 +9,9 @@ FLAG='-fns'
 # Emacs
 if [ ! -d "~/.emacs.d" ]; then
     mkdir ~/.emacs.d
+fi
+if [ ! -d "~/.emacs.d/elpa" ]; then
+    mkdir ~/.emacs.d/elpa
 fi
 ln $FLAG ~/.dotfiles/emacs/init.el ~/.emacs.d/init.el
 ln $FLAG ~/.dotfiles/emacs/themes/ ~/.emacs.d/themes

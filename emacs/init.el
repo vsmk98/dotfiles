@@ -54,6 +54,8 @@
    color-theme		                ; nice looking emacs
    autopair
    smart-compile
+   rainbow-mode
+   markdown-mode
 ))	                
 
 ;;
@@ -89,16 +91,17 @@
 (setq indent-tabs-mode nil)
 (setq tab-stop-list ())
 
-
-
+(load-theme 'hickey t)                  ; theme setting
 
 (column-number-mode 1)                  ; column numbers in the mode line
 (line-number-mode 1)                    ; have line numbers and
-(load-theme 'hickey t)                  ; theme setting
-(scroll-bar-mode -1)                    ; no scroll bars
+
 (setq fill-column 80)                   ; 80-column 
+
+(scroll-bar-mode -1)                    ; no scroll bars
 (setq inhibit-splash-screen t)          ; no splash screen, thanks
 (tool-bar-mode -1)                      ; no tool bar with icons
+
 (unless (string-match "apple-darwin" system-configuration)
   ;; on mac, there's always a menu bar drown, don't have it empty
   (menu-bar-mode -1))
@@ -115,6 +118,19 @@
 (when (string-match "apple-darwin" system-configuration)
   (setq mac-allow-anti-aliasing t))
 
+;; Set Ido color
+(custom-set-faces
+   ;; Face used by ido for highlighting subdirs in the alternatives.
+   '(ido-subdir ((t (:foreground "#C0AEDE")))) 
+   ;; Face used by ido for highlighting first match.
+   '(ido-first-match ((t (:foreground "#AEE239")))) 
+   ;; Face used by ido for highlighting only match.
+   '(ido-only-match ((t (:foreground "#FD971F")))) 
+   ;; Face used by ido for highlighting its indicators (don't actually use this)
+   '(ido-indicator ((t (:foreground "#ffffff")))) 
+   ;; Ido face for indicating incomplete regexps. (don't use this either)
+   '(ido-incomplete-regexp ((t (:foreground "#ffffff")))))
+
 
 ;;-----------------------------------------------------------
 ;;                     SMALL FIXED                          |
@@ -122,6 +138,9 @@
 
 ;; avoid compiz manager rendering bugs
 (add-to-list 'default-frame-alist '(alpha . 100))
+
+;; use y/n instead of yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; copy/paste with C-c and C-v and C-x, check out C-RET too
 (cua-mode)
@@ -167,7 +186,6 @@
 (setq ido-enable-flex-matching t)
 (setq ido-use-filename-at-point 'guess)
 (setq ido-show-dot-for-dired t)
-
 (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
 (global-set-key (kbd "C-x C-c") 'ibuffer)
 
@@ -192,13 +210,10 @@
 (setq tramp-default-method "ssh")
 
 ;; CSS and Rainbow modes
-;; Load both major and minor modes in one call based on file type 
-;; (defun all-css-modes() (css-mode) (rainbow-mode)) 
-;; (add-to-list 'auto-mode-alist '("\\.css$" . all-css-modes))
+(defun all-css-modes() (css-mode) (rainbow-mode)) 
+(add-to-list 'auto-mode-alist '("\\.css$" . all-css-modes))
 
 ;;autopair
 (require 'autopair)
 (autopair-global-mode)
 (put 'upcase-region 'disabled nil)
-
-

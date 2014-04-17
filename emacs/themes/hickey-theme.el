@@ -71,7 +71,6 @@
     (custom-set-faces '(default ((t (:background "nil")))))))
 
 (provide-theme 'hickey)
-
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; End:
