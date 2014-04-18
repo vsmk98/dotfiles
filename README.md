@@ -1,15 +1,10 @@
 Install
 =======
 
-Get this bash script
-https://gist.github.com/Szkered/11019077
-
-Then simply run it
-
+Simple run
 ```Bash
-bash install.sh
+curl -sSL https://gist.githubusercontent.com/Szkered/11019077/raw/e91c358d55cf746260c425ce6999191052c537e1/install.sh | bash
 ```
-
 Emacs
 =====
 
