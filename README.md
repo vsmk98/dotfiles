@@ -1,12 +1,10 @@
 Install
 =======
 
-Simply run
-
+Simple run
 ```Bash
-bash install.sh
+curl -sSL https://gist.githubusercontent.com/Szkered/11019077/raw/e91c358d55cf746260c425ce6999191052c537e1/install.sh | bash
 ```
-
 Emacs
 =====
 
@@ -18,6 +16,10 @@ To install new package, add the name of the package into the dependency list loc
 (setq
  my:el-get-packages
  '(el-get				; el-get is self-hosting
+   .
+   .
+   .
  ;; -> add package here!
+))
 ```
 To lookup available packages, run `M-x el-get-package-menu-revert`
