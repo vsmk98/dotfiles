@@ -1,7 +1,10 @@
 Install
 =======
 
-Simply run
+Get this bash script
+https://gist.github.com/Szkered/11019077
+
+Then simply run it
 
 ```Bash
 bash install.sh
@@ -18,6 +21,10 @@ To install new package, add the name of the package into the dependency list loc
 (setq
  my:el-get-packages
  '(el-get				; el-get is self-hosting
+   .
+   .
+   .
  ;; -> add package here!
+))
 ```
 To lookup available packages, run `M-x el-get-package-menu-revert`
