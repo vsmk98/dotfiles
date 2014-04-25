@@ -239,4 +239,4 @@
  '(whitespace-style (quote (face tabs spaces trailing lines space-before-tab newline empty space-mark tab-mark newline-mark))))
 
 ;;------------------------------TODO------------------------------
-;; setup clojure web stack
+;; setup clojure web stack!
