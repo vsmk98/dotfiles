@@ -1,0 +1,9 @@
+[user]
+	name = Szkered
+	email = emperorview@gmail.com
+[push]
+	default = simple
+[color]
+	ui = true
+	status = auto
+	branch = auto

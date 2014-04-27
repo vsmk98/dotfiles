@@ -3,6 +3,8 @@
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(setq default-directory "~/")
+(setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
 
 (unless (require 'el-get nil t)
   (url-retrieve
@@ -203,7 +205,7 @@
 
 ;; TRAMP
 (require 'tramp)
-(setq tramp-default-host "cz2006.ciel.im")
+(setq tramp-default-host "128.199.196.219")
 (setq tramp-default-user "root")
 (setq tramp-default-method "ssh")
 
