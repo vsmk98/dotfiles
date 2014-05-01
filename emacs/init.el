@@ -2,16 +2,7 @@
 (require 'cl)				; common lisp goodies, loop
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (setq default-directory "~/")
-(setq default-terminal-coding-system "utf-8-unix")
-;; Detect endianness of UTF-16 containing a Byte Order Mark U+FEFF
-;; Detect EOL mode by looking for CR/LF on the first line
-(add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE.*\x0D\x00$" . utf-16-le-dos) t)
-(add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF.*\x0D\x00$" . utf-16-be-dos) t)
-(add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE" . utf-16-le) t)
-(add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF" . utf-16-be) t)
-
 
 (unless (require 'el-get nil t)
   (url-retrieve
@@ -63,6 +54,7 @@
    
    (:name color-theme
 	  :after (progn
+		   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 		   (load-theme 'qvintvs t)))
    
    (:name smart-compile
@@ -146,8 +138,8 @@
 
 ;; choose your own fonts, in a system dependant way
 (if (string-match "apple-darwin" system-configuration)
-    (set-face-font 'default "Monaco-13") ; for laptop
-  ;; (set-face-font 'default "Inconsolata-dz for Powerline-14") ; for laptop
+    ;; (set-face-font 'default "Monaco-13") ; large for laptop
+  (set-face-font 'default "Menlo-11") ; small font for laptop
   ;; (set-face-font 'default "Consolas-16") ; for monitor
   (set-face-font 'default "Monospace-10"))
 
@@ -201,18 +193,27 @@
 ;;-------------------------BIGGER FIXES------------------------------
 
 ;; zsh support
+
 (setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
 (setq multi-term-program "/bin/zsh")
 (global-set-key (kbd "<f1>") 'multi-term)
 (global-set-key (kbd "M-[") 'multi-term-prev)
 (global-set-key (kbd "M-]") 'multi-term-next)
+
+(setq default-terminal-coding-system "utf-8-unix")
 (set-language-environment  'utf-8)
 (prefer-coding-system 'utf-8)
-
 (require 'ucs-normalize) 
 (setq file-name-coding-system 'utf-8-hfs)
 (setq locale-coding-system 'utf-8-hfs)
 (setq system-uses-terminfo nil)
+
+;; Detect endianness of UTF-16 containing a Byte Order Mark U+FEFF
+;; Detect EOL mode by looking for CR/LF on the first line
+(add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE.*\x0D\x00$" . utf-16-le-dos) t)
+(add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF.*\x0D\x00$" . utf-16-be-dos) t)
+(add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE" . utf-16-le) t)
+(add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF" . utf-16-be) t)
 
 ;; use ido for minibuffer completion
 (require 'ido)
