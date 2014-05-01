@@ -4,7 +4,14 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (setq default-directory "~/")
-(setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
+(setq default-terminal-coding-system "utf-8-unix")
+;; Detect endianness of UTF-16 containing a Byte Order Mark U+FEFF
+;; Detect EOL mode by looking for CR/LF on the first line
+(add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE.*\x0D\x00$" . utf-16-le-dos) t)
+(add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF.*\x0D\x00$" . utf-16-be-dos) t)
+(add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE" . utf-16-le) t)
+(add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF" . utf-16-be) t)
+
 
 (unless (require 'el-get nil t)
   (url-retrieve
@@ -70,6 +77,10 @@
 			     (lambda () (setq indent-tabs-mode t)))
 		   (add-hook 'java-mode-hook 'smart-tab-mode)
 		   (add-hook 'emacs-lisp-mode-hook 'smart-tab-mode)))
+
+   (:name powerline
+	  :after (progn
+		   (powerline-default-theme)))
    
    (:name rainbow-mode
 	  :after (progn
@@ -116,12 +127,17 @@
 
 (line-number-mode 1)		     ; have line numbers and
 (column-number-mode 1)		     ; column numbers in the mode line
-(setq fill-column 80)		     ; 80-column
+;; (setq fill-column 80)		     ; 80-column
 (scroll-bar-mode -1)		     ; no scroll bars
 (setq inhibit-splash-screen t)	     ; no splash screen, thanks
 (tool-bar-mode -1)		     ; no tool bar with icons
 (global-hl-line-mode)		     ; highlight current line
+(make-variable-buffer-local 'global-hl-line-mode)
+(add-hook 'term-mode-hook
+          (lambda () (setq global-hl-line-mode nil)))
 (global-linum-mode 1)		     ; add line numbers on the left
+(add-hook 'term-mode-hook
+	  (lambda () (setq linum-mode nil)))
 (setq linum-format " %d")	     ; space before line numbers
 
 (unless (string-match "apple-darwin" system-configuration)
@@ -130,8 +146,9 @@
 
 ;; choose your own fonts, in a system dependant way
 (if (string-match "apple-darwin" system-configuration)
-	(set-face-font 'default "Monaco-13") ; for laptop
-  	;; (set-face-font 'default "Consolas-16") ; for monitor
+    (set-face-font 'default "Monaco-13") ; for laptop
+  ;; (set-face-font 'default "Inconsolata-dz for Powerline-14") ; for laptop
+  ;; (set-face-font 'default "Consolas-16") ; for monitor
   (set-face-font 'default "Monospace-10"))
 
 (when (string-match "apple-darwin" system-configuration)
@@ -183,6 +200,20 @@
 
 ;;-------------------------BIGGER FIXES------------------------------
 
+;; zsh support
+(setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
+(setq multi-term-program "/bin/zsh")
+(global-set-key (kbd "<f1>") 'multi-term)
+(global-set-key (kbd "M-[") 'multi-term-prev)
+(global-set-key (kbd "M-]") 'multi-term-next)
+(set-language-environment  'utf-8)
+(prefer-coding-system 'utf-8)
+
+(require 'ucs-normalize) 
+(setq file-name-coding-system 'utf-8-hfs)
+(setq locale-coding-system 'utf-8-hfs)
+(setq system-uses-terminfo nil)
+
 ;; use ido for minibuffer completion
 (require 'ido)
 (ido-mode t)
@@ -208,6 +239,16 @@
 (setq tramp-default-host "128.199.196.219")
 (setq tramp-default-user "root")
 (setq tramp-default-method "ssh")
+
+(setq whitespace-display-mappings
+       ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
+      '(
+        (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+        (newline-mark 10 [182 10]) ; 10 LINE FEED
+        (tab-mark 9 [8677 9] [92 9]) ; 9 TAB, 8677 RIGHTWARDS ARROW TO BAR ⇥
+        ))
+
+
 
 ;;--------------------CUSTOM VARIABLE--------------------
 
