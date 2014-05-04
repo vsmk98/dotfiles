@@ -33,8 +33,6 @@
 
    (:name magit				; git meet emacs, and a binding
 	  :after (progn
-		   (global-set-key (kbd ">") 'magit-push)
-		   (global-set-key (kbd "<") 'magit-pull)
 		   (global-set-key (kbd "C-x C-z") 'magit-status)))
 
    (:name goto-last-change		; move pointer back to last change
