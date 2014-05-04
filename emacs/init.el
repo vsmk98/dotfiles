@@ -2,6 +2,7 @@
 (require 'cl)				; common lisp goodies, loop
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(setq user-emacs-directory "~/.emacs.d")
 (setq default-directory "~/")
 
 (unless (require 'el-get nil t)
@@ -32,6 +33,8 @@
 
    (:name magit				; git meet emacs, and a binding
 	  :after (progn
+		   (global-set-key (kbd ">") 'magit-push)
+		   (global-set-key (kbd "<") 'magit-pull)
 		   (global-set-key (kbd "C-x C-z") 'magit-status)))
 
    (:name goto-last-change		; move pointer back to last change

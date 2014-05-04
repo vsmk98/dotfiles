@@ -1,6 +1,8 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+alias vpn="sshuttle -r root@128.199.196.187 0.0.0.0/0"
+
 # emacs support
 if [ -n "$INSIDE_EMACS" ]; then
     chpwd() { print -P "\033AnSiTc %d" }
