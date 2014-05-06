@@ -40,11 +40,13 @@
 		   ;; when using AZERTY keyboard, consider C-x C-_
 		   (global-set-key (kbd "C-x C-/") 'goto-last-change)))
    
-   (:name cider
+   (:name cider				; a major mode for clojure
 	  :after (progn
+		   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 		   (add-hook 'clojure-mode-hook 'cider-mode)
 		   (add-hook 'clojure-mode-hook 'paredit-mode)
 		   (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+		   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 		   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 		   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)))
    
@@ -74,7 +76,7 @@
    (:name powerline
 	  :after (progn
 		   (powerline-default-theme)))
-   
+
    (:name rainbow-mode
 	  :after (progn
 		   (defun all-css-modes() (css-mode) (rainbow-mode))
@@ -88,6 +90,7 @@
    markdown-mode
    sass-mode
    paredit
+   rainbow-delimiters-mode
 ))
 
 ;;
@@ -155,8 +158,15 @@
   (find-file-at-point user-init-file))
 (global-set-key (kbd "<f5>") 'find-user-init-file)
 
+;; easy window scrolling up and down
+(global-set-key (kbd "M-p") 'scroll-up-line)
+(global-set-key (kbd "M-n") 'scroll-down-line)
+
 ;; quick shell command
 (global-set-key (kbd "C-\;") 'async-shell-command)
+
+;; org mode fix
+(global-set-key (kbd "<C-M-return>") 'org-insert-heading-after-current)
 
 ;; avoid compiz manager rendering bugs
 (add-to-list 'default-frame-alist '(alpha . 100))
@@ -242,15 +252,14 @@
 (setq tramp-default-user "root")
 (setq tramp-default-method "ssh")
 
+;; whitespace mode tweak
 (setq whitespace-display-mappings
        ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
       '(
-        (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+        (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT ·, 46 FULL STOP .
         (newline-mark 10 [182 10]) ; 10 LINE FEED
         (tab-mark 9 [8677 9] [92 9]) ; 9 TAB, 8677 RIGHTWARDS ARROW TO BAR ⇥
         ))
-
-
 
 ;;--------------------CUSTOM VARIABLE--------------------
 
