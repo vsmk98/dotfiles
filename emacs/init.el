@@ -42,13 +42,17 @@
    
    (:name cider				; a major mode for clojure
 	  :after (progn
-		   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 		   (add-hook 'clojure-mode-hook 'cider-mode)
 		   (add-hook 'clojure-mode-hook 'paredit-mode)
+		   (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+		   (add-hook 'cider-repl-mode-hook 'paredit-mode)
 		   (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+		   (add-hook 'cider-mode-hook 'rainbow-delimiters-mode)
 		   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 		   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-		   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)))
+		   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+		   (setq nrepl-hide-special-buffers t)
+		   (setq cider-repl-result-prefix "=> ")))
    
    (:name autopair
 	  :after (progn
@@ -90,7 +94,7 @@
    markdown-mode
    sass-mode
    paredit
-   rainbow-delimiters-mode
+   rainbow-delimiters
 ))
 
 ;;
@@ -123,7 +127,7 @@
 
 (line-number-mode 1)		     ; have line numbers and
 (column-number-mode 1)		     ; column numbers in the mode line
-;; (setq fill-column 80)		     ; 80-column
+(setq fill-column 80)		     ; 80-column
 (scroll-bar-mode -1)		     ; no scroll bars
 (setq inhibit-splash-screen t)	     ; no splash screen, thanks
 (tool-bar-mode -1)		     ; no tool bar with icons
@@ -260,6 +264,9 @@
         (newline-mark 10 [182 10]) ; 10 LINE FEED
         (tab-mark 9 [8677 9] [92 9]) ; 9 TAB, 8677 RIGHTWARDS ARROW TO BAR ⇥
         ))
+
+;; thesaurus mode
+(setq thesaurus-bhl-api-key "d0c3a24ec0f4736607baf64c4340824c")
 
 ;;--------------------CUSTOM VARIABLE--------------------
 
