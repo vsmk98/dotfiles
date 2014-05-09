@@ -3,12 +3,18 @@ export ZSH=$HOME/.oh-my-zsh
 
 alias vpn="sshuttle -r root@128.199.196.187 0.0.0.0/0"
 
+# ca-bundle
+export SSL_CERT_FILE=/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt
+
+# pyenv setting
+export PATH=/usr/local/bin:$PATH
+eval "$(pyenv init -)"
+
 # emacs support
 if [ -n "$INSIDE_EMACS" ]; then
     chpwd() { print -P "\033AnSiTc %d" }
     print -P "\033AnSiTu %n"
     print -P "\033AnSiTc %d"
-    ZSH_THEME="qvintvs"
 else
     ZSH_THEME="agnoster"
 fi

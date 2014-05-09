@@ -147,8 +147,8 @@
 ;; choose your own fonts, in a system dependant way
 (if (string-match "apple-darwin" system-configuration)
     ;; (set-face-font 'default "Monaco-13") ; large for laptop
-  (set-face-font 'default "Menlo-11") ; small font for laptop
-  ;; (set-face-font 'default "Consolas-16") ; for monitor
+  ;; (set-face-font 'default "Menlo-11") ; small font for laptop
+  (set-face-font 'default "Consolas-16") ; for monitor
   (set-face-font 'default "Monospace-10"))
 
 (when (string-match "apple-darwin" system-configuration)
