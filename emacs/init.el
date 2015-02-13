@@ -78,8 +78,8 @@
 		   (add-hook 'emacs-lisp-mode-hook 'smart-tab-mode)))
 
    (:name powerline
-	  :after (progn
-		   (powerline-default-theme)))
+   	  :after (progn
+   		   (powerline-default-theme)))
 
    (:name rainbow-mode
 	  :after (progn
@@ -95,13 +95,19 @@
    sass-mode
    paredit
    rainbow-delimiters
+   tuareg-mode
+   auctex
+   ;; matlab-mode
 ))
 
 ;;
 ;; Some recipes require extra tools to be installed
 ;;
 
-(when (el-get-executable-find "svn")
+(when (ignore-errors (el-get-executable-find "cvs"))
+   (add-to-list 'my:el-get-packages 'emacs-goodies-el)) 
+
+(when (ignore-errors (el-get-executable-find "svn"))
   (loop for p in '(psvn				; M-x svn-status
 		   yasnippet		; powerful snippet mode
 		   )
@@ -267,6 +273,57 @@
 
 ;; thesaurus mode
 (setq thesaurus-bhl-api-key "d0c3a24ec0f4736607baf64c4340824c")
+
+;; ESS
+(add-to-list 'load-path "~/.emacs.d/ESS/lisp/")
+(load "ess-site")
+
+;; Matlab
+(autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
+(custom-set-variables
+ '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+(add-hook 'matlab-mode-hook 'auto-complete-mode)
+(add-hook 'matlab-shell-mode-hook 'auto-complete-mode)
+(add-to-list
+ 'auto-mode-alist
+ '("\\.m$" . matlab-mode))
+(setq matlab-indent-function t)
+(setq matlab-shell-command "matlab")
+
+;; Tex
+(add-hook 'latex-mode-hook 'auto-complete-mode)
+
+;; ARFF syntax highlight
+(require 'generic)
+(define-generic-mode 'arff-file-mode
+  (list ?%)
+  (list "attribute" "relation" "end" "data")
+  '(
+    ("\\('.*'\\)" 1 'font-lock-string-face)    
+    ("^\\@\\S-*\\s-\\(\\S-*\\)" 1 'font-lock-string-face)    
+    ("^\\@.*\\(real\\)" 1 'font-lock-type-face)    
+    ("^\\@.*\\(integer\\)" 1 'font-lock-type-face)    
+    ("^\\@.*\\(numeric\\)" 1 'font-lock-type-face)    
+    ("^\\@.*\\(string\\)" 1 'font-lock-type-face)    
+    ("^\\@.*\\(date\\)" 1 'font-lock-type-face)    
+    ("^\\@.*\\({.*}\\)" 1 'font-lock-type-face)    
+    ("^\\({\\).*\\(}\\)$" (1 'font-lock-reference-face) (2
+'font-lock-reference-face))
+    ("\\(\\?\\)" 1 'font-lock-reference-face)    
+    ("\\(\\,\\)" 1 'font-lock-keyword-face)    
+    ("\\(-?[0-9]+?.?[0-9]+\\)" 1 'font-lock-constant-face)    
+    ("\\(\\@\\)" 1 'font-lock-preprocessor-face)    
+    )
+  (list "\.arff?")
+  (list
+   (function
+    (lambda () 
+      (setq font-lock-defaults (list 'generic-font-lock-defaults nil t ; case
+insensitive
+                                     (list (cons ?* "w") (cons ?- "w"))))
+      (turn-on-font-lock))))
+  "Mode for arff-files.")
+
 
 ;;--------------------CUSTOM VARIABLE--------------------
 

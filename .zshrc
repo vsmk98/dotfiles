@@ -2,6 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 alias vpn="sshuttle -r root@128.199.196.187 0.0.0.0/0"
+alias t="tmux a -t 0"
 
 # ca-bundle
 export SSL_CERT_FILE=/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt
@@ -62,7 +63,6 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-export PATH="/Users/Qvintvs/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -70,3 +70,17 @@ export LANG=en_US.UTF-8
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# Matlab
+export PATH=$PATH:/Applications/MATLAB_R2012b.app/bin/
+
+# WEKA
+export CLASSPATH=/Applications/weka-3-6-12-oracle-jvm.app/Contents/Java/weka.jar:$CLASSPATH
+
+# OPAM configuration
+. /Users/Derek/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+# lib
+export LD_LIBRARY_PATH="/usr/local/lib"
