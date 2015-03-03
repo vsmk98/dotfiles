@@ -57,6 +57,10 @@
    (:name autopair
 	  :after (progn
 		   (autopair-global-mode)
+		   (add-hook 'LaTeX-mode-hook
+			     #' (lambda ()
+				       (modify-syntax-entry ?$ "\"")
+				       (autopair-mode)))
 		   (put 'upcase-region 'disabled nil)))
    
    (:name color-theme
@@ -80,6 +84,18 @@
    (:name powerline
    	  :after (progn
    		   (powerline-default-theme)))
+
+   (:name AUCTeX
+	  :after (progn
+		   (add-hook 'LaTeX-mode-hook 'auto-complete-mode)
+		   (setq TeX-auto-save t)
+		   (setq TeX-parse-self t)
+		   (setq TeX-save-query nil)
+		   (setq TeX-PDF-mode t)))
+
+   (:name yasnippet
+	  :after (progn
+		   (yas-global-mode 1)))
 
    (:name rainbow-mode
 	  :after (progn
@@ -206,16 +222,20 @@
 (show-paren-mode t)
 (setq show-paren-style 'parentheses)
 
-;;display current file path
+;; display current file path
 (setq frame-title-format
 	  (list (format "%s %%S: %%j " (system-name))
 		'(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+
+;; PATH
+(setenv "PATH" "/Users/Derek/.rvm/gems/ruby-1.9.3-p545/bin:/Users/Derek/.rvm/gems/ruby-1.9.3-p545@global/bin:/Users/Derek/.rvm/rubies/ruby-1.9.3-p545/bin:/Users/Derek/.opam/system/bin:/Users/Derek/.pyenv/shims:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin:/Applications/MATLAB_R2012b.app/bin/:/Users/Derek/.rvm/bin")
+
 
 ;;-------------------------BIGGER FIXES------------------------------
 
 ;; zsh support
 
-(setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
+;; (setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
 (setq multi-term-program "/bin/zsh")
 (global-set-key (kbd "<f1>") 'multi-term)
 (global-set-key (kbd "M-[") 'multi-term-prev)
@@ -290,9 +310,6 @@
 (setq matlab-indent-function t)
 (setq matlab-shell-command "matlab")
 
-;; Tex
-(add-hook 'latex-mode-hook 'auto-complete-mode)
-
 ;; ARFF syntax highlight
 (require 'generic)
 (define-generic-mode 'arff-file-mode
@@ -324,15 +341,33 @@ insensitive
       (turn-on-font-lock))))
   "Mode for arff-files.")
 
+;; ==>flymake
 
-;;--------------------CUSTOM VARIABLE--------------------
+;; (require 'flymake)
+;; (defun flymake-get-tex-args (file-name)
+;;   (list "pdflatex"
+;; 	(list "-file-line-error" "-draftmode" "-interaction=nonstopmode"
+;; 	      file-name)))
+;; (add-hook 'LaTeX-mode-hook 'flymake-mode)
+
+;; outline
+(defun turn-on-outline-minor-mode ()
+  (outline-minor-mode 1))
+(add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
+(add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
+(setq outline-minor-mode-prefix (kbd "C-c C-o"))
+
+;;--------------------custom VARIABLE--------------------
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+ ;; If there is more than one, they won't workright.
  '(whitespace-style (quote (face tabs spaces trailing lines space-before-tab newline empty space-mark tab-mark newline-mark))))
 
 ;;------------------------------TODO------------------------------
+;; evernote
 ;; setup clojure web stack
+;; flymake
+;; fix matlab recipe
