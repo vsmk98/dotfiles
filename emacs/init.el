@@ -86,12 +86,12 @@
    		   (powerline-default-theme)))
 
    (:name AUCTeX
-	  :after (progn
-		   (add-hook 'LaTeX-mode-hook 'auto-complete-mode)
-		   (setq TeX-auto-save t)
-		   (setq TeX-parse-self t)
-		   (setq TeX-save-query nil)
-		   (setq TeX-PDF-mode t)))
+   	  :after (progn
+   		   (add-hook 'LaTeX-mode-hook 'auto-complete-mode)
+   		   (setq TeX-auto-save t)
+   		   (setq TeX-parse-self t)
+   		   (setq TeX-save-query nil)
+   		   (setq TeX-PDF-mode t)))
 
    (:name yasnippet
 	  :after (progn
@@ -112,7 +112,6 @@
    paredit
    rainbow-delimiters
    tuareg-mode
-   auctex
    ;; matlab-mode
 ))
 
@@ -168,9 +167,9 @@
 
 ;; choose your own fonts, in a system dependant way
 (if (string-match "apple-darwin" system-configuration)
-    ;; (set-face-font 'default "Monaco-13") ; large for laptop
+    (set-face-font 'default "Monaco-13") ; large for laptop
   ;; (set-face-font 'default "Menlo-11") ; small font for laptop
-  (set-face-font 'default "Consolas-16") ; for monitor
+  ;; (set-face-font 'default "Consolas-16") ; for monitor
   (set-face-font 'default "Monospace-10"))
 
 (when (string-match "apple-darwin" system-configuration)
@@ -228,14 +227,13 @@
 		'(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; PATH
-(setenv "PATH" "/Users/Derek/.rvm/gems/ruby-1.9.3-p545/bin:/Users/Derek/.rvm/gems/ruby-1.9.3-p545@global/bin:/Users/Derek/.rvm/rubies/ruby-1.9.3-p545/bin:/Users/Derek/.opam/system/bin:/Users/Derek/.pyenv/shims:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin:/Applications/MATLAB_R2012b.app/bin/:/Users/Derek/.rvm/bin")
+(setenv "PATH" (concat (getenv "PATH") ":/Applications/MATLAB_R2014b.app/bin:/usr/texbin"))
+(setq exec-path (append exec-path '("/Applications/MATLAB_R2014b.app/bin" "/usr/texbin")))
 
 
 ;;-------------------------BIGGER FIXES------------------------------
 
 ;; zsh support
-
-;; (setenv "PATH" "~/.pyenv/shims:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
 (setq multi-term-program "/bin/zsh")
 (global-set-key (kbd "<f1>") 'multi-term)
 (global-set-key (kbd "M-[") 'multi-term-prev)
@@ -295,11 +293,14 @@
 (setq thesaurus-bhl-api-key "d0c3a24ec0f4736607baf64c4340824c")
 
 ;; ESS
-(add-to-list 'load-path "~/.emacs.d/ESS/lisp/")
+;; (require 'ess-site)
+(add-to-list 'load-path "~/.emacs.d/ess-14-2.09/lisp/")
 (load "ess-site")
 
 ;; Matlab
-(autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
+(add-to-list 'load-path "~/.emacs.d/matlab-emacs/")
+(load-library "matlab-load")
+;; (autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
 (custom-set-variables
  '(matlab-shell-command-switches '("-nodesktop -nosplash")))
 (add-hook 'matlab-mode-hook 'auto-complete-mode)
