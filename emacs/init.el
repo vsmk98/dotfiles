@@ -112,7 +112,8 @@
    paredit
    rainbow-delimiters
    tuareg-mode
-   ;; matlab-mode
+   ess
+   matlab-mode
 ))
 
 ;;

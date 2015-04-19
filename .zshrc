@@ -4,9 +4,6 @@ export ZSH=$HOME/.oh-my-zsh
 alias vpn="sshuttle -r root@128.199.196.187 0.0.0.0/0"
 alias t="tmux a -t 0"
 
-# ca-bundle
-export SSL_CERT_FILE=/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt
-
 # pyenv setting
 export PATH=/usr/local/bin:$PATH
 eval "$(pyenv init -)"
@@ -74,7 +71,7 @@ export LANG=en_US.UTF-8
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 # Matlab
-export PATH=$PATH:/Applications/MATLAB_R2012b.app/bin/
+export PATH=$PATH:/Applications/MATLAB_R2014b.app/bin/
 
 # WEKA
 export CLASSPATH=/Applications/weka-3-6-12-oracle-jvm.app/Contents/Java/weka.jar:$CLASSPATH
