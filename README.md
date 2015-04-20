@@ -3,7 +3,8 @@ Install
 
 Simple run
 ```Bash
-curl -sSL https://gist.githubusercontent.com/Szkered/11019077/raw/e91c358d55cf746260c425ce6999191052c537e1/install.sh | bash
+curl -sSL https://gist.githubusercontent.com/Szkered/11019077/raw/b928154e965cd03e9a6abea480026874688aea4a/install.sh | bash
+
 ```
 Emacs
 =====
