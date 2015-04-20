@@ -113,8 +113,8 @@
    rainbow-delimiters
    tuareg-mode
    ess
-   matlab-mode
-))
+   ;; matlab-mode
+   ))
 
 ;;
 ;; Some recipes require extra tools to be installed
@@ -228,8 +228,8 @@
 		'(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; PATH
-(setenv "PATH" (concat (getenv "PATH") ":/Applications/MATLAB_R2014b.app/bin:/usr/texbin"))
-(setq exec-path (append exec-path '("/Applications/MATLAB_R2014b.app/bin" "/usr/texbin")))
+(setenv "PATH" (concat (getenv "PATH") ":/Applications/MATLAB_R2014b.app/bin:/usr/texbin:/usr/local/bin"))
+(setq exec-path (append exec-path '("/Applications/MATLAB_R2014b.app/bin" "/usr/texbin" "/usr/local/bin")))
 
 
 ;;-------------------------BIGGER FIXES------------------------------
@@ -299,8 +299,8 @@
 (load "ess-site")
 
 ;; Matlab
-(add-to-list 'load-path "~/.emacs.d/matlab-emacs/")
-(load-library "matlab-load")
+;; (add-to-list 'load-path "~/.emacs.d/matlab-emacs/")
+;; (load-library "matlab-load")
 ;; (autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
 (custom-set-variables
  '(matlab-shell-command-switches '("-nodesktop -nosplash")))

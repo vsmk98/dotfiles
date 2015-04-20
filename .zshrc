@@ -71,7 +71,7 @@ export LANG=en_US.UTF-8
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 # Matlab
-export PATH=$PATH:/Applications/MATLAB_R2014b.app/bin/
+export PATH=$PATH:/Applications/MATLAB_R2014b.app/bin
 
 # WEKA
 export CLASSPATH=/Applications/weka-3-6-12-oracle-jvm.app/Contents/Java/weka.jar:$CLASSPATH
