@@ -7,6 +7,7 @@ alias t="tmux a -t 0"
 # pyenv setting
 export PATH=/usr/local/bin:$PATH
 eval "$(pyenv init -)"
+alias brew="env PATH=${PATH/\/Users\/Zekun\/\.pyenv\/shims:/} brew"
 
 # emacs support
 if [ -n "$INSIDE_EMACS" ]; then
