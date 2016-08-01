@@ -7,16 +7,23 @@ alias t="tmux a -t 0"
 # pyenv setting
 export PATH=/usr/local/bin:$PATH
 eval "$(pyenv init -)"
-alias brew="env PATH=${PATH/\/Users\/Zekun\/\.pyenv\/shims:/} brew"
+eval "$(pyenv virtualenv-init -)"
+# alias brew="env PATH=${PATH/\/Users\/Zekun\/\.pyenv\/shims:/} brew"
+alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
 
 # emacs support
 if [ -n "$INSIDE_EMACS" ]; then
-    chpwd() { print -P "\033AnSiTc %d" }
-    print -P "\033AnSiTu %n"
-    print -P "\033AnSiTc %d"
+    # chpwd() { print -P "\033AnSiTc %d" }
+    # print -P "\033AnSiTu %n"
+    # print -P "\033AnSiTc %d"
+    ZSH_THEME="agnoster"
 else
     ZSH_THEME="agnoster"
 fi
+
+# fuck
+alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"

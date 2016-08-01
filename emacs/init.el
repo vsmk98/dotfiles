@@ -2,6 +2,7 @@
 (require 'cl)				; common lisp goodies, loop
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(add-to-list 'load-path "~/.emacs.d/elpa")
 (setq user-emacs-directory "~/.emacs.d")
 (setq default-directory "~/")
 
@@ -9,8 +10,8 @@
   (url-retrieve
    "https://github.com/dimitri/el-get/raw/master/el-get-install.el"
    (lambda (s)
-	 (end-of-buffer)
-	 (eval-print-last-sexp))))
+     (end-of-buffer)
+     (eval-print-last-sexp))))
 
 ;; now either el-get is `require'd already, or have been `load'ed by the
 ;; el-get installer.
@@ -59,8 +60,12 @@
 		   (autopair-global-mode)
 		   (add-hook 'LaTeX-mode-hook
 			     #' (lambda ()
-				       (modify-syntax-entry ?$ "\"")
-				       (autopair-mode)))
+				  (modify-syntax-entry ?$ "\"")
+				  (autopair-mode)))
+		   (add-hook 'c++-mode-hook
+			     #'(lambda ()
+				 (push '(?< . ?>)
+				       (getf autopair-extra-pairs :code))))
 		   (put 'upcase-region 'disabled nil)))
    
    (:name color-theme
@@ -95,7 +100,10 @@
 
    (:name yasnippet
 	  :after (progn
-		   (yas-global-mode 1)))
+		   (yas-global-mode 1)
+		   (define-key yas-minor-mode-map (kbd "<tab>") nil)
+		   (define-key yas-minor-mode-map (kbd "\t") nil)
+		   (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)))
 
    (:name rainbow-mode
 	  :after (progn
@@ -114,6 +122,10 @@
    tuareg-mode
    ess
    ;; matlab-mode
+   scala-mode2
+   web-mode
+   sunrise-commander
+   sunrise-x-tree
    ))
 
 ;;
@@ -121,7 +133,7 @@
 ;;
 
 (when (ignore-errors (el-get-executable-find "cvs"))
-   (add-to-list 'my:el-get-packages 'emacs-goodies-el)) 
+  (add-to-list 'my:el-get-packages 'emacs-goodies-el)) 
 
 (when (ignore-errors (el-get-executable-find "svn"))
   (loop for p in '(psvn				; M-x svn-status
@@ -130,9 +142,9 @@
 	do (add-to-list 'my:el-get-packages p)))
 
 (setq my:el-get-packages
-	  (append
-	   my:el-get-packages
-	   (loop for src in el-get-sources collect (el-get-source-name src))))
+      (append
+       my:el-get-packages
+       (loop for src in el-get-sources collect (el-get-source-name src))))
 
 ;; install new packages and init already installed packages
 (el-get 'sync my:el-get-packages)
@@ -178,6 +190,28 @@
 
 ;;-----------------------SMALL FIXES--------------------------
 
+;; web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+(defun web-mode-customize-hook ()
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  )
+(add-hook 'web-mode-hook  'web-mode-customize-hook)
+
+
+;; emmet
+(add-hook 'html-mode-hook 'emmet-mode)
+
 ;; fast access to init.el
 (defun find-user-init-file ()
   (interactive)
@@ -210,7 +244,7 @@
 (windmove-default-keybindings 'meta)
 (setq windmove-wrap-around t)
 
-; winner-mode provides C-c <left> to get back to previous window layout
+					; winner-mode provides C-c <left> to get back to previous window layout
 (winner-mode 1)
 
 ;; whenever an external process changes a file underneath emacs, and there
@@ -224,15 +258,19 @@
 
 ;; display current file path
 (setq frame-title-format
-	  (list (format "%s %%S: %%j " (system-name))
-		'(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+      (list (format "%s %%S: %%j " (system-name))
+	    '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; PATH
-(setenv "PATH" (concat (getenv "PATH") ":/Applications/MATLAB_R2014b.app/bin:/usr/texbin:/usr/local/bin"))
-(setq exec-path (append exec-path '("/Applications/MATLAB_R2014b.app/bin" "/usr/texbin" "/usr/local/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":/Applications/MATLAB_R2014b.app/bin:/Library/Tex/texbin:/usr/local/bin"))
+(setq exec-path (append exec-path '("/Applications/MATLAB_R2014b.app/bin" "/Library/Tex/texbin" "/usr/local/bin")))
 
 
 ;;-------------------------BIGGER FIXES------------------------------
+
+;; projectile
+(projectile-global-mode)
+
 
 ;; zsh support
 (setq multi-term-program "/bin/zsh")
@@ -255,6 +293,7 @@
 (add-to-list 'auto-coding-regexp-alist '("^\xFF\xFE" . utf-16-le) t)
 (add-to-list 'auto-coding-regexp-alist '("^\xFE\xFF" . utf-16-be) t)
 
+
 ;; use ido for minibuffer completion
 (require 'ido)
 (ido-mode t)
@@ -265,6 +304,14 @@
 (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
 (global-set-key (kbd "C-x C-c") 'ibuffer)
 
+;; (require 'flx-ido)
+;; (ido-mode 1)
+;; (ido-everywhere 1)
+;; (flx-ido-mode 1)
+;; ;; disable ido faces to see flx highlights.
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-use-faces nil)
+
 ;; C-x C-j opens dired with the cursor right on the file you're editing
 (require 'dired-x)
 
@@ -272,18 +319,23 @@
 (defun fullscreen ()
   (interactive)
   (set-frame-parameter nil 'fullscreen
-			   (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
+		       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
 (global-set-key [f11] 'fullscreen)
 
 ;; TRAMP
+
 (require 'tramp)
-(setq tramp-default-host "128.199.196.219")
+;; Mine Droplet
+;; (setq tramp-default-host "128.199.196.187")
+;; Hazelcast
+;; (setq tramp-default-host "128.199.169.148")
+(setq tramp-default-host "104.131.157.135")
 (setq tramp-default-user "root")
 (setq tramp-default-method "ssh")
 
 ;; whitespace mode tweak
 (setq whitespace-display-mappings
-       ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
+      ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
       '(
         (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT ·, 46 FULL STOP .
         (newline-mark 10 [182 10]) ; 10 LINE FEED
@@ -303,7 +355,15 @@
 ;; (load-library "matlab-load")
 ;; (autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
 (custom-set-variables
- '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(TeX-engine (quote xetex))
+ '(matlab-shell-command-switches (quote ("-nodesktop -nosplash")))
+ '(whitespace-style
+   (quote
+    (face tabs spaces trailing lines space-before-tab newline empty space-mark tab-mark newline-mark))))
 (add-hook 'matlab-mode-hook 'auto-complete-mode)
 (add-hook 'matlab-shell-mode-hook 'auto-complete-mode)
 (add-to-list
@@ -327,7 +387,7 @@
     ("^\\@.*\\(date\\)" 1 'font-lock-type-face)    
     ("^\\@.*\\({.*}\\)" 1 'font-lock-type-face)    
     ("^\\({\\).*\\(}\\)$" (1 'font-lock-reference-face) (2
-'font-lock-reference-face))
+							 'font-lock-reference-face))
     ("\\(\\?\\)" 1 'font-lock-reference-face)    
     ("\\(\\,\\)" 1 'font-lock-keyword-face)    
     ("\\(-?[0-9]+?.?[0-9]+\\)" 1 'font-lock-constant-face)    
@@ -338,14 +398,33 @@
    (function
     (lambda () 
       (setq font-lock-defaults (list 'generic-font-lock-defaults nil t ; case
-insensitive
+				     insensitive
                                      (list (cons ?* "w") (cons ?- "w"))))
       (turn-on-font-lock))))
   "Mode for arff-files.")
 
-;; ==>flymake
+;; JDEE
 
+(add-to-list 'load-path "~/.emacs.d/jdee-2.4.1/lisp")
+(autoload 'jde-mode "jde" "JDE mode" t)
+(setq auto-mode-alist
+      (append '(("\\.java\\'" . jde-mode)) auto-mode-alist))
+(setq jde-help-remote-file-exists-function '("beanshell"))
+
+;; ==>flymake
 ;; (require 'flymake)
+;; (when (load "flymake" t) 
+;;   (defun flymake-pyflakes-init () 
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy 
+;;                        'flymake-create-temp-inplace)) 
+;;            (local-file (file-relative-name 
+;;                         temp-file 
+;;                         (file-name-directory buffer-file-name)))) 
+;;       (list "pyflakes" (list local-file)))) 
+;;   (add-to-list 'flymake-allowed-file-name-masks 
+;;                '("\\.py\\'" flymake-pyflakes-init)))
+;; (add-hook 'python-mode-hook 'flymake-mode)
+;; (add-hook 'django-mode-hook 'flymake-mode)
 ;; (defun flymake-get-tex-args (file-name)
 ;;   (list "pdflatex"
 ;; 	(list "-file-line-error" "-draftmode" "-interaction=nonstopmode"
@@ -361,15 +440,16 @@ insensitive
 
 ;;--------------------custom VARIABLE--------------------
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't workright.
- '(whitespace-style (quote (face tabs spaces trailing lines space-before-tab newline empty space-mark tab-mark newline-mark))))
+
 
 ;;------------------------------TODO------------------------------
 ;; evernote
 ;; setup clojure web stack
 ;; flymake
 ;; fix matlab recipe
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
