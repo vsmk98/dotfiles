@@ -5,7 +5,9 @@ alias vpn="sshuttle -r root@128.199.196.187 0.0.0.0/0"
 alias t="tmux a -t 0"
 
 # pyenv setting
-export PATH=/usr/local/bin:$PATH
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+# export PATH=/usr/local/bin:$PATH
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 # alias brew="env PATH=${PATH/\/Users\/Zekun\/\.pyenv\/shims:/} brew"
@@ -71,6 +73,7 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
+export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # Compilation flags
@@ -89,3 +92,18 @@ export CLASSPATH=/Applications/weka-3-6-12-oracle-jvm.app/Contents/Java/weka.jar
 
 # lib
 export LD_LIBRARY_PATH="/usr/local/lib"
+
+# scrapy DO NOT INCLUDE IF NOT USING
+# export PATH="/Users/Zekun/.pyenv/versions/3.5.2/Python.framework/Versions/3.5/bin:$PATH"
+
+# CUDA
+export CUDA_HOME=/usr/local/cuda
+export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$CUDA_HOME/lib"
+export PATH="$CUDA_HOME/bin:$PATH"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/Zekun/.sdkman"
+[[ -s "/Users/Zekun/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/Zekun/.sdkman/bin/sdkman-init.sh"
+
+export PYENV_ROOT=/usr/local/var/pyenv
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
