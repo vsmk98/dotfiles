@@ -13,6 +13,8 @@
      (end-of-buffer)
      (eval-print-last-sexp))))
 
+(require 'el-get-elpa)
+
 ;; now either el-get is `require'd already, or have been `load'ed by the
 ;; el-get installer.
 
@@ -180,13 +182,16 @@
 
 ;; choose your own fonts, in a system dependant way
 (if (string-match "apple-darwin" system-configuration)
-    (set-face-font 'default "Monaco-13") ; large for laptop
-  ;; (set-face-font 'default "Menlo-11") ; small font for laptop
+    ;; (set-face-font 'default "Monaco-13") ; large for laptop
+    ;; (set-face-font 'default "Fira-mono-14") ; large for laptop
+    ;; (set-face-font 'default "Menlo-13") ; small font for laptop
+    (set-face-font 'default "Source-code-pro-14") ; small font for laptop
   ;; (set-face-font 'default "Consolas-16") ; for monitor
   (set-face-font 'default "Monospace-10"))
 
 (when (string-match "apple-darwin" system-configuration)
   (setq mac-allow-anti-aliasing t))
+
 
 ;;-----------------------SMALL FIXES--------------------------
 
@@ -360,6 +365,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(TeX-engine (quote xetex))
+ '(custom-safe-themes
+   (quote
+    ("08b8807d23c290c840bbb14614a83878529359eaba1805618b3be7d61b0b0a32" default)))
  '(matlab-shell-command-switches (quote ("-nodesktop -nosplash")))
  '(whitespace-style
    (quote

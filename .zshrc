@@ -7,8 +7,9 @@ alias t="tmux a -t 0"
 # pyenv setting
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # export PATH=/usr/local/bin:$PATH
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 # alias brew="env PATH=${PATH/\/Users\/Zekun\/\.pyenv\/shims:/} brew"
 alias brew="env PATH=${PATH//$(pyenv root)\/shims:/} brew"
@@ -105,5 +106,4 @@ export PATH="$CUDA_HOME/bin:$PATH"
 export SDKMAN_DIR="/Users/Zekun/.sdkman"
 [[ -s "/Users/Zekun/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/Zekun/.sdkman/bin/sdkman-init.sh"
 
-export PYENV_ROOT=/usr/local/var/pyenv
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+
