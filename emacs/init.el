@@ -1,4 +1,11 @@
 ;;-----------------------KICK STARTER------------------------------
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (require 'cl)				; common lisp goodies, loop
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
@@ -73,7 +80,7 @@
    (:name color-theme
 	  :after (progn
 		   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-		   (load-theme 'qvintvs t)))
+		   (load-theme 'atom-one-dark t)))
    
    (:name smart-compile
 	  :after (progn
@@ -127,7 +134,7 @@
    scala-mode2
    web-mode
    sunrise-commander
-   sunrise-x-tree
+   ;; sunrise-x-tree
    ))
 
 ;;
@@ -184,8 +191,8 @@
 (if (string-match "apple-darwin" system-configuration)
     ;; (set-face-font 'default "Monaco-13") ; large for laptop
     ;; (set-face-font 'default "Fira-mono-14") ; large for laptop
-    ;; (set-face-font 'default "Menlo-13") ; small font for laptop
-    (set-face-font 'default "Source-code-pro-14") ; small font for laptop
+    (set-face-font 'default "Menlo-13") ; small font for laptop
+    ;; (set-face-font 'default "Source-code-pro-14") ; small font for laptop
   ;; (set-face-font 'default "Consolas-16") ; for monitor
   (set-face-font 'default "Monospace-10"))
 

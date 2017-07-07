@@ -1,6 +1,10 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+bindkey -e
+bindkey '^[f' forward-word
+bindkey '^[b' backward-word
+
 alias vpn="sshuttle -r root@128.199.196.187 0.0.0.0/0"
 alias t="tmux a -t 0"
 
@@ -107,3 +111,4 @@ export SDKMAN_DIR="/Users/Zekun/.sdkman"
 [[ -s "/Users/Zekun/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/Zekun/.sdkman/bin/sdkman-init.sh"
 
 
+export NODE_PATH=/usr/local/lib/node_modules/
