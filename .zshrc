@@ -112,3 +112,14 @@ export SDKMAN_DIR="/Users/Zekun/.sdkman"
 
 
 export NODE_PATH=/usr/local/lib/node_modules/
+
+
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# yeah! no termius or any that kind of bullshit..
+nx() {
+    #do things with parameters like $1 such as
+    # ssh "azureuser@quorumnx$1.southeastasia.cloudapp.azure.com"
+    sshpass -p sYner#@123987 ssh "azureuser@quorumnx$1.southeastasia.cloudapp.azure.com"
+}
+
