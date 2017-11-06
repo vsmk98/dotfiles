@@ -392,6 +392,11 @@ you should place your code here."
     "Make counsel-ag aware of project root directory."
     (list nil (projectile-project-root)))
   (advice-add 'counsel-ag :filter-args #'counsel-ag-advice)
+
+  ;; (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+  (setq org-mobile-inbox-for-pull "~/Dropbox/org")
+  (setq org-directory "~/Dropbox/org")
+
   )
 
 ;; do not write anything past this comment. This is where Emacs will
