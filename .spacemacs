@@ -386,6 +386,12 @@ you should place your code here."
   (define-key yas-minor-mode-map (kbd "<tab>") nil)
   (define-key yas-minor-mode-map (kbd "\t") nil)
   (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
+  (define-key global-map (kbd "C-c s") 'counsel-ag)
+
+  (defun counsel-ag-advice (args)
+    "Make counsel-ag aware of project root directory."
+    (list nil (projectile-project-root)))
+  (advice-add 'counsel-ag :filter-args #'counsel-ag-advice)
   )
 
 ;; do not write anything past this comment. This is where Emacs will
