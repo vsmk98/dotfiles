@@ -397,6 +397,8 @@ you should place your code here."
   (setq org-mobile-inbox-for-pull "~/Dropbox/org")
   (setq org-directory "~/Dropbox/org")
 
+  (evil-mc-mode 1)
+
   )
 
 ;; do not write anything past this comment. This is where Emacs will
