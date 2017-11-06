@@ -386,6 +386,9 @@ you should place your code here."
   (define-key yas-minor-mode-map (kbd "<tab>") nil)
   (define-key yas-minor-mode-map (kbd "\t") nil)
   (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
+
+  (spaceline-toggle-remote-host-off)
+
   (define-key global-map (kbd "C-c s") 'counsel-ag)
 
   (defun counsel-ag-advice (args)
