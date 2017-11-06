@@ -402,6 +402,8 @@ you should place your code here."
 
   (evil-mc-mode 1)
 
+  (define-key ggtags-mode-map (kbd "M-[") 'ggtags-find-definition)
+
   )
 
 ;; do not write anything past this comment. This is where Emacs will
