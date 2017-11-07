@@ -398,9 +398,9 @@ you should place your code here."
     (list nil (projectile-project-root)))
   (advice-add 'counsel-ag :filter-args #'counsel-ag-advice)
 
-  ;; (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (setq org-mobile-inbox-for-pull "~/Dropbox/org")
-  (setq org-directory "~/Dropbox/org")
+  (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+  (setq org-mobile-inbox-for-pull "~/org/flagged.org")
+  (setq org-directory "~/org")
 
   (evil-mc-mode 1)
 
