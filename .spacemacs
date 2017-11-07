@@ -333,7 +333,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
      (get-buffer-process (current-buffer))
      (if string string (current-kill 0))))
 
-  (doom-themes-neotree-config)
+  ;; (doom-themes-neotree-config)
   )
 
 (defun dotspacemacs/user-config ()
