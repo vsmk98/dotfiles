@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     pdf-tools
      osx
      csv
      python
@@ -140,7 +141,9 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ocean
+   dotspacemacs-themes '(
+                         sanityinc-tomorrow-eighties
+                         base16-ocean
                          base16-eighties
                          majapahit-light
                          doom-one
@@ -151,9 +154,9 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Meslo LG S DZ for Powerline"
-;; "Meslo LG S DZ for Powerline"
-                               :size 12
+   dotspacemacs-default-font '(
+                               "Meslo LG S DZ for Powerline"
+                               :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -351,11 +354,11 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; custom colors for base16-ocean theme
-  (set-face-attribute 'fringe nil
-                      :foreground (face-background 'default)
-                      :background (face-background 'default))
-  (set-face-attribute 'vertical-border nil
-                      :foreground "#282a2e")
+  ;; (set-face-attribute 'fringe nil
+  ;;                     :foreground (face-background 'default)
+  ;;                     :background (face-background 'default))
+  ;; (set-face-attribute 'vertical-border nil
+  ;;                     :foreground "#282a2e")
 
   (global-set-key (kbd "C-c +") 'evil-numbers/inc-at-pt)
   (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt)
@@ -415,11 +418,12 @@ you should place your code here."
   (advice-add 'counsel-ag :filter-args #'counsel-ag-advice)
 
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (setq org-mobile-inbox-for-pull "~/org/flagged.org")
-  (setq org-directory "~/org")
-  (setq org-agenda-files (list "~/org/work.org"
-                               "~/org/health.org"
-                               "~/org/personal.org"))
+  (setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
+  (setq org-directory "~/Dropbox/org")
+  (setq org-agenda-files (list "~/Dropbox/org/work.org"
+                               "~/Dropbox/org/health.org"
+                               "~/Dropbox/org/personal.org"))
+  (setq org-default-notes-file (concat org-directory "/inbox.org"))
 
   (evil-mc-mode 1)
 
@@ -437,6 +441,7 @@ you should place your code here."
   (evil-define-key 'normal haskell-mode-map "K" 'haskell-hoogle-lookup-from-local)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (add-hook 'haskell-mode-hook 'intero-mode)
+  (define-key haskell-mode-map (kbd "M-[") 'haskell-mode-tag-find)
 
   )
 
@@ -451,6 +456,8 @@ you should place your code here."
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(ansi-term-color-vector
+   [unspecified "#2b303b" "#bf616a" "#a3be8c" "#ebcb8b" "#8fa1b3" "#b48ead" "#8fa1b3" "#c0c5ce"] t)
  '(background-color "#202020")
  '(background-mode dark)
  '(compilation-message-face (quote default))
@@ -558,9 +565,9 @@ static char *gnus-pointer[] = {
  '(org-fontify-whole-heading-line t)
  '(package-selected-packages
    (quote
-    (reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl keyfreq base16-theme olivetti csv-mode org-beautify-theme helm-tramp helm-pydoc helm-gtags helm-css-scss flyspell-correct-helm ace-jump-helm-line ledger-mode flycheck-ledger counsel-gtags ggtags ag visual-fill-column evil-goggles company-auctex auctex-latexmk auctex all-the-icons-ivy all-the-icons-gnus all-the-icons-dired solaire-mode spaceline-all-the-icons atom-one-dark-theme rainbow-mode itail vagrant-tramp company-anaconda pyenv-mode-auto yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode anaconda-mode pythonic git-gutter-fringe flycheck-pos-tip git-gutter-fringe+ fringe-helper git-gutter+ git-gutter flyspell-correct-ivy flyspell-correct pos-tip flycheck-haskell diff-hl auto-dictionary rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby less-css-mode unfill mwim company-web web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode web-completion-data load-theme-buffer-local color-theme-buffer-local doom-themes org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help wgrep smex ivy-hydra counsel-projectile counsel swiper ivy mmm-mode markdown-toc markdown-mode gh-md zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-unimpaired intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode solidity-mode smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode spinner helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet adaptive-wrap ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state -colors
-         (quote
-          ("#DCDCCC" . "#383838")))))
+    (pandoc base16-theme pdf-tools tablist reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl keyfreq olivetti csv-mode org-beautify-theme helm-tramp helm-pydoc helm-gtags helm-css-scss flyspell-correct-helm ace-jump-helm-line ledger-mode flycheck-ledger counsel-gtags ggtags ag visual-fill-column evil-goggles company-auctex auctex-latexmk auctex all-the-icons-ivy all-the-icons-gnus all-the-icons-dired solaire-mode spaceline-all-the-icons atom-one-dark-theme rainbow-mode itail vagrant-tramp company-anaconda pyenv-mode-auto yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode anaconda-mode pythonic git-gutter-fringe flycheck-pos-tip git-gutter-fringe+ fringe-helper git-gutter+ git-gutter flyspell-correct-ivy flyspell-correct pos-tip flycheck-haskell diff-hl auto-dictionary rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby less-css-mode unfill mwim company-web web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode web-completion-data load-theme-buffer-local color-theme-buffer-local doom-themes org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help wgrep smex ivy-hydra counsel-projectile counsel swiper ivy mmm-mode markdown-toc markdown-mode gh-md zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-unimpaired intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode solidity-mode smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode spinner helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet adaptive-wrap ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state -colors
+            (quote
+             ("#DCDCCC" . "#383838")))))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -568,7 +575,7 @@ static char *gnus-pointer[] = {
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(term-default-bg-color "#002b36")
  '(term-default-fg-color "#839496")
- '(tramp-syntax (quote default) nil (tramp))
+ '(tramp-syntax (quote default))
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map
