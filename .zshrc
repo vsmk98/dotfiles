@@ -125,3 +125,6 @@ nx() {
 
 export PATH="/usr/local/opt/node@6/bin:$PATH"
 # export GTAGSLABEL=pygments
+
+
+source "/Users/Zekun/.oh-my-zsh/custom/themes/spaceship.zsh-theme"

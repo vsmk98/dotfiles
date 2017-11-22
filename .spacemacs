@@ -155,8 +155,9 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(
+                               ;; "Fira Code"
                                "Meslo LG S DZ for Powerline"
-                               :size 13
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -354,9 +355,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; custom colors for base16-ocean theme
-  ;; (set-face-attribute 'fringe nil
-  ;;                     :foreground (face-background 'default)
-  ;;                     :background (face-background 'default))
+  (set-face-attribute 'fringe nil
+                      ;; :foreground (face-background 'default)
+                      :background (face-background 'default))
   ;; (set-face-attribute 'vertical-border nil
   ;;                     :foreground "#282a2e")
 
@@ -382,6 +383,7 @@ you should place your code here."
    )
 
   (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
   ;; doom theme
   ;; (doom-themes-visual-bell-config)
@@ -418,12 +420,31 @@ you should place your code here."
   (advice-add 'counsel-ag :filter-args #'counsel-ag-advice)
 
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
+  (setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.txt")
   (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files (list "~/Dropbox/org/work.org"
-                               "~/Dropbox/org/health.org"
-                               "~/Dropbox/org/personal.org"))
-  (setq org-default-notes-file (concat org-directory "/inbox.org"))
+  (setq org-agenda-files (list "~/Dropbox/org/inbox.txt"
+                               "~/Dropbox/org/work.txt"
+                               "~/Dropbox/org/health.txt"
+                               "~/Dropbox/org/journal.txt"
+                               "~/Dropbox/org/personal.txt"))
+  (setq org-refile-targets
+        '((nil :maxlevel . 3)
+          (org-agenda-files :maxlevel . 3)))
+  (setq org-default-notes-file (concat org-directory "/inbox.txt"))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(d)")                               ; simple task like grocery list
+          (sequence "HANGER(h)" "RUNWAY(r)" "AIRBORNE(a)" "|" "LANDED(l)") ; complex task
+          (sequence "GOAL(g)" "|" "SUCCEEDED(s)" "FAILED(f)"))             ; habit forming
+        )
+  (setq org-capture-templates
+        '(("t" "Task" entry (file+headline "~/Dropbox/org/inbox.txt" "Staging Area")
+           "* HANGER %?")
+          ("b" "Buy" entry (file+headline "~/Dropbox/org/personal.txt" "Shopping List")
+           "* TODO %?")
+          ("d" "Debug" entry (file+headline "~/Dropbox/org/inbox.txt" "Staging Area")
+           "* TODO %?\n %i\n  %a")
+          ("j" "Journal" plain (file+olp+datetree "~/Dropbox/org/journal.txt")
+           "%?\nEntered on %U\n")))
 
   (evil-mc-mode 1)
 
@@ -442,6 +463,46 @@ you should place your code here."
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (add-hook 'haskell-mode-hook 'intero-mode)
   (define-key haskell-mode-map (kbd "M-[") 'haskell-mode-tag-find)
+  (define-key haskell-mode-map (kbd "C-M-;") 'comment-dwim)
+
+  ;; window resizing key bindings
+  (global-set-key (kbd "<s-up>") 'shrink-window)
+  (global-set-key (kbd "<s-down>") 'enlarge-window)
+  (global-set-key (kbd "<s-left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "<s-right>") 'enlarge-window-horizontally)
+
+  ;; Ligature for Fira Code
+  ;; (when (window-system)
+  ;;   (set-default-font "Fira Code"))
+  ;; (let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
+  ;;                (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
+  ;;                (36 . ".\\(?:>\\)")
+  ;;                (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
+  ;;                (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
+  ;;                (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
+  ;;                (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
+  ;;                (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
+  ;;                (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
+  ;;                (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
+  ;;                (48 . ".\\(?:x[a-zA-Z]\\)")
+  ;;                (58 . ".\\(?:::\\|[:=]\\)")
+  ;;                (59 . ".\\(?:;;\\|;\\)")
+  ;;                (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
+  ;;                (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
+  ;;                (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
+  ;;                (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
+  ;;                (91 . ".\\(?:]\\)")
+  ;;                (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
+  ;;                (94 . ".\\(?:=\\)")
+  ;;                (119 . ".\\(?:ww\\)")
+  ;;                (123 . ".\\(?:-\\)")
+  ;;                (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
+  ;;                (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
+  ;;                )
+  ;;              ))
+  ;;   (dolist (char-regexp alist)
+  ;;     (set-char-table-range composition-function-table (car char-regexp)
+  ;;                           `([,(cdr char-regexp) 0 font-shape-gstring]))))
 
   )
 
@@ -454,10 +515,8 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(ansi-term-color-vector
-   [unspecified "#2b303b" "#bf616a" "#a3be8c" "#ebcb8b" "#8fa1b3" "#b48ead" "#8fa1b3" "#c0c5ce"] t)
+ ;; '(ansi-color-names-vector
+ ;;   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(background-color "#202020")
  '(background-mode dark)
  '(compilation-message-face (quote default))
@@ -565,9 +624,9 @@ static char *gnus-pointer[] = {
  '(org-fontify-whole-heading-line t)
  '(package-selected-packages
    (quote
-    (pandoc base16-theme pdf-tools tablist reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl keyfreq olivetti csv-mode org-beautify-theme helm-tramp helm-pydoc helm-gtags helm-css-scss flyspell-correct-helm ace-jump-helm-line ledger-mode flycheck-ledger counsel-gtags ggtags ag visual-fill-column evil-goggles company-auctex auctex-latexmk auctex all-the-icons-ivy all-the-icons-gnus all-the-icons-dired solaire-mode spaceline-all-the-icons atom-one-dark-theme rainbow-mode itail vagrant-tramp company-anaconda pyenv-mode-auto yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode anaconda-mode pythonic git-gutter-fringe flycheck-pos-tip git-gutter-fringe+ fringe-helper git-gutter+ git-gutter flyspell-correct-ivy flyspell-correct pos-tip flycheck-haskell diff-hl auto-dictionary rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby less-css-mode unfill mwim company-web web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode web-completion-data load-theme-buffer-local color-theme-buffer-local doom-themes org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help wgrep smex ivy-hydra counsel-projectile counsel swiper ivy mmm-mode markdown-toc markdown-mode gh-md zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-unimpaired intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode solidity-mode smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode spinner helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet adaptive-wrap ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state -colors
-            (quote
-             ("#DCDCCC" . "#383838")))))
+    (base16-theme doom-themes pandoc pdf-tools tablist reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl keyfreq olivetti csv-mode org-beautify-theme helm-tramp helm-pydoc helm-gtags helm-css-scss flyspell-correct-helm ace-jump-helm-line ledger-mode flycheck-ledger counsel-gtags ggtags ag visual-fill-column evil-goggles company-auctex auctex-latexmk auctex all-the-icons-ivy all-the-icons-gnus all-the-icons-dired solaire-mode spaceline-all-the-icons atom-one-dark-theme rainbow-mode itail vagrant-tramp company-anaconda pyenv-mode-auto yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode anaconda-mode pythonic git-gutter-fringe flycheck-pos-tip git-gutter-fringe+ fringe-helper git-gutter+ git-gutter flyspell-correct-ivy flyspell-correct pos-tip flycheck-haskell diff-hl auto-dictionary rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby less-css-mode unfill mwim company-web web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode web-completion-data load-theme-buffer-local color-theme-buffer-local org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help wgrep smex ivy-hydra counsel-projectile counsel swiper ivy mmm-mode markdown-toc markdown-mode gh-md zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-unimpaired intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode solidity-mode smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode spinner helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet adaptive-wrap ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state -colors
+                  (quote
+                   ("#DCDCCC" . "#383838")))))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -575,7 +634,6 @@ static char *gnus-pointer[] = {
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(term-default-bg-color "#002b36")
  '(term-default-fg-color "#839496")
- '(tramp-syntax (quote default))
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map
