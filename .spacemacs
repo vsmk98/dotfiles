@@ -31,6 +31,9 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     yaml
+     react
+     ipython-notebook
      pdf-tools
      osx
      csv
@@ -148,7 +151,7 @@ values."
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-scratch-mode 'lisp-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -196,7 +199,7 @@ values."
    ;; works in the GUI. (default nil)
    dotspacemacs-distinguish-gui-tab nil
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
-   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-remap-Y-to-y$ t
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
    ;; there. (default t)
    dotspacemacs-retain-visual-state-on-shift t
@@ -240,7 +243,7 @@ values."
    dotspacemacs-helm-use-fuzzy 'always
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
-   dotspacemacs-enable-paste-transient-state nil
+   dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
    dotspacemacs-which-key-delay 0.4
@@ -386,14 +389,14 @@ you should place your code here."
   ;;                     :foreground "#282a2e")
 
   ;; fix mode line file name display(require 'nadvice)
-  (defun my-truncate-buffer-name (buf-name)
-    (let ((len (length buf-name)))
-      (cond ((> len 20)
-             (concat (substring buf-name 0 10)
-                     "..."
-                     (substring buf-name (- len 7) len)))
-            (t buf-name))))
-  (advice-add 'powerline-buffer-id :filter-return 'my-truncate-buffer-name)
+  ;; (defun my-truncate-buffer-name (buf-name)
+  ;;   (let ((len (length buf-name)))
+  ;;     (cond ((> len 20)
+  ;;            (concat (substring buf-name 0 10)
+  ;;                    "..."
+  ;;                    (substring buf-name (- len 7) len)))
+  ;;           (t buf-name))))
+  ;; (advice-add 'powerline-buffer-id :filter-return 'my-truncate-buffer-name)
 
   ;; no line highlight in term mode
   (add-hook 'term-mode-hook (lambda ()
@@ -401,10 +404,20 @@ you should place your code here."
                                           nil)))
 
   ;; indentation setting
-  (custom-set-variables
-   '(js2-basic-offset 2)
-   '(js2-bounce-indent-p t)
-   )
+  (setq-default
+   ;; js2-mode
+   js2-basic-offset 2
+   ;; web-mode
+   css-indent-offset 2
+   web-mode-markup-indent-offset 2
+   web-mode-css-indent-offset 2
+   web-mode-code-indent-offset 2
+   web-mode-attr-indent-offset 2)
+
+  (with-eval-after-load 'web-mode
+    (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
 
   ;; file extension
   (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
@@ -461,8 +474,11 @@ you should place your code here."
   (evil-define-key 'normal haskell-mode-map "K" 'haskell-hoogle-lookup-from-local)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (add-hook 'haskell-mode-hook 'intero-mode)
-  ;; (define-key haskell-mode-map (kbd "M-[") 'haskell-mode-tag-find) ;; TODO -> debug
-  ;; (define-key haskell-mode-map (kbd "C-M-;") 'comment-dwim)
+  (add-hook 'haskell-mode-hook (lambda ()
+                                 (define-key haskell-mode-map (kbd "M-[") 'haskell-mode-tag-find)
+                                 (define-key haskell-mode-map (kbd "C-M-;") 'comment-dwim)
+                                 ))
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "S" 'structured-haskell-mode)
 
   ;; window resizing key bindings
   (global-set-key (kbd "<s-up>") 'shrink-window)
@@ -485,31 +501,38 @@ you should place your code here."
   (evil-define-key 'normal global-map (kbd "C-f") 'avy-goto-char-2-in-line)
 
   ;; org-mode config
+  (add-hook 'text-mode-hook (lambda ()
+                              (setq left-fringe-width 0)
+                              (setq right-fringe-width 0)
+                              ))
+  (add-hook 'org-mode-hook (lambda ()
+                             (visual-line-mode)
+                             (org-indent-mode)))
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.txt")
+  (setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
   (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files (list "~/Dropbox/org/inbox.txt"
-                               "~/Dropbox/org/work.txt"
-                               "~/Dropbox/org/health.txt"
-                               "~/Dropbox/org/journal.txt"
-                               "~/Dropbox/org/personal.txt"))
+  (setq org-agenda-files (list "~/Dropbox/org/inbox.org"
+                               "~/Dropbox/org/work.org"
+                               "~/Dropbox/org/health.org"
+                               "~/Dropbox/org/journal.org"
+                               "~/Dropbox/org/personal.org"))
   (setq org-refile-targets
         '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 3)))
-  (setq org-default-notes-file (concat org-directory "/inbox.txt"))
+  (setq org-default-notes-file (concat org-directory "/inbox.org"))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "HANGER(h)" "RUNWAY(r)" "AIRBORNE(a)" "|" "DONE(d)")
         ))
   (setq org-capture-templates
-        '(("t" "Task" entry (file+headline "~/Dropbox/org/inbox.txt" "Staging Area")
+        '(("t" "Task" entry (file+headline "~/Dropbox/org/inbox.org" "Staging Area")
            "* TODO %?")
-          ("b" "Buy" entry (file+headline "~/Dropbox/org/personal.txt" "Shopping List")
+          ("b" "Buy" entry (file+headline "~/Dropbox/org/personal.org" "Shopping List")
            "* TODO %?")
-          ("d" "Debug" entry (file+headline "~/Dropbox/org/inbox.txt" "Staging Area")
+          ("d" "Debug" entry (file+headline "~/Dropbox/org/inbox.org" "Staging Area")
            "* TODO %?\n %i\n  %a")
-          ("v" "Vocab" plain (file "~/Dropbox/org/vocab_builder.txt")
+          ("v" "Vocab" plain (file "~/Dropbox/org/vocab_builder.org")
            "%?")
-          ("j" "Journal" plain (file+olp+datetree "~/Dropbox/org/journal.txt")
+          ("j" "Journal" plain (file+olp+datetree "~/Dropbox/org/journal.org")
            "%?\nEntered on %U\n")))
   (require 'org-habit)
   (add-to-list 'org-modules 'org-habit)
@@ -556,6 +579,29 @@ you should place your code here."
                                                      (org-agenda-skip-entry-if 'todo '("AIRBORNE" "RUNWAY"))))
                       (org-agenda-overriding-header "Projects / Tasks in the HANGER:"))))
            ((org-agenda-compact-blocks t)))))
+
+  ;; company mode fix
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "C-f") nil))
+  ;; ;; <return> is for windowed Emacs; RET is for terminal Emacs
+  ;; (dolist (key '("<return>" "RET"))
+  ;;   ;; Here we are using an advanced feature of define-key that lets
+  ;;   ;; us pass an "extended menu item" instead of an interactive
+  ;;   ;; function. Doing this allows RET to regain its usual
+  ;;   ;; functionality when the user has not explicitly interacted with
+  ;;   ;; Company.
+  ;;   (define-key company-active-map (kbd key)
+  ;;     `(menu-item nil company-complete
+  ;;                 :filter ,(lambda (cmd)
+  ;;                            (when (company-explicit-action-p)
+  ;;                              cmd)))))
+  ;; (define-key company-active-map (kbd "TAB") #'company-complete-selection)
+  ;; (define-key company-active-map (kbd "SPC") nil)
+
+  ;; ;; Company appears to override the above keymap based on company-auto-complete-chars.
+  ;; ;; Turning it off ensures we have full control.
+  ;; (setq company-auto-complete-chars nil)
+
 
   ;; Ligature for Fira Code. Maybe I'll want it someday?
   ;; (when (window-system)
@@ -640,12 +686,12 @@ static char *note[] = {
  '(evil-insert-state-cursor (quote ("#D50000" bar)) t)
  '(evil-normal-state-cursor (quote ("#F57F17" box)) t)
  '(evil-visual-state-cursor (quote ("#66BB6A" box)) t)
- '(evil-want-Y-yank-to-eol nil)
+ '(evil-want-Y-yank-to-eol t)
  '(fci-rule-character-color "#192028")
  '(fci-rule-color "#3C3D37" t)
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(foreground-color "#cccccc")
- '(gnus-logo-colors (quote ("#259ea2" "#adadad")))
+ '(gnus-logo-colors (quote ("#259ea2" "#adadad")) t)
  '(gnus-mode-line-image-cache
    (quote
     (image :type xpm :ascent center :data "/* XPM */
@@ -668,7 +714,7 @@ static char *gnus-pointer[] = {
 \"######..###.######\",
 \"###....####.######\",
 \"###..######.######\",
-\"###########.######\" };")))
+\"###########.######\" };")) t)
  '(haskell-tags-on-save t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-indent-guides-auto-enabled nil)
@@ -699,7 +745,7 @@ static char *gnus-pointer[] = {
  '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(js-indent-level 2)
- '(js2-basic-offset 2)
+ '(js2-basic-offset 2 t)
  '(js2-bounce-indent-p t)
  '(linum-format " %3i ")
  '(magit-diff-use-overlays nil)
@@ -716,9 +762,9 @@ static char *gnus-pointer[] = {
  '(org-fontify-whole-heading-line t)
  '(package-selected-packages
    (quote
-    (eziam-theme highlight-indent-guides base16-theme focus writeroom-mode darkroom visual-regexp-steroids visual-regexp doom-themes pandoc pdf-tools tablist reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl keyfreq olivetti csv-mode org-beautify-theme helm-tramp helm-pydoc helm-gtags helm-css-scss flyspell-correct-helm ace-jump-helm-line ledger-mode flycheck-ledger counsel-gtags ggtags ag visual-fill-column evil-goggles company-auctex auctex-latexmk auctex all-the-icons-ivy all-the-icons-gnus all-the-icons-dired solaire-mode spaceline-all-the-icons atom-one-dark-theme rainbow-mode itail vagrant-tramp company-anaconda pyenv-mode-auto yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode anaconda-mode pythonic git-gutter-fringe flycheck-pos-tip git-gutter-fringe+ fringe-helper git-gutter+ git-gutter flyspell-correct-ivy flyspell-correct pos-tip flycheck-haskell diff-hl auto-dictionary rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby less-css-mode unfill mwim company-web web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode web-completion-data load-theme-buffer-local color-theme-buffer-local org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help wgrep smex ivy-hydra counsel-projectile counsel swiper ivy mmm-mode markdown-toc markdown-mode gh-md zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-unimpaired intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode solidity-mode smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode spinner helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet adaptive-wrap ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state -colors
-                 (quote
-                  ("#DCDCCC" . "#383838")))))
+    (yaml-mode ein request-deferred websocket deferred shm org-projectile evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link centered-window-mode google-this wgrep-ag eziam-theme highlight-indent-guides base16-theme focus writeroom-mode darkroom visual-regexp-steroids visual-regexp doom-themes pandoc pdf-tools tablist reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl keyfreq olivetti csv-mode org-beautify-theme helm-tramp helm-pydoc helm-gtags helm-css-scss flyspell-correct-helm ace-jump-helm-line ledger-mode flycheck-ledger counsel-gtags ggtags ag visual-fill-column evil-goggles company-auctex auctex-latexmk auctex all-the-icons-ivy all-the-icons-gnus all-the-icons-dired solaire-mode spaceline-all-the-icons atom-one-dark-theme rainbow-mode itail vagrant-tramp company-anaconda pyenv-mode-auto yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode anaconda-mode pythonic git-gutter-fringe flycheck-pos-tip git-gutter-fringe+ fringe-helper git-gutter+ git-gutter flyspell-correct-ivy flyspell-correct pos-tip flycheck-haskell diff-hl auto-dictionary rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby less-css-mode unfill mwim company-web web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode web-completion-data load-theme-buffer-local color-theme-buffer-local org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help wgrep smex ivy-hydra counsel-projectile swiper ivy mmm-mode markdown-toc markdown-mode gh-md zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-unimpaired intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode solidity-mode smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode spinner helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet adaptive-wrap ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state -colors
+               (quote
+                ("#DCDCCC" . "#383838")))))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
