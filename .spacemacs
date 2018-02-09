@@ -338,6 +338,12 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (when (string-equal system-type "windows-nt")
+    (setq-default dotspacemacs-default-font '("Consolas"
+                                             :size 14
+                                             :weight normal
+                                             :width normal
+                                             :powerline-scale 1.1)))
 
   (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                            ("marmalade" . "https://marmalade-repo.org/packages/")
@@ -378,6 +384,7 @@ you should place your code here."
                                               nil)))
 
   (use-package rainbow-mode)
+  (setq rainbow-html-colors t)
 
   ;; fringe color should be the same as bg
   (set-face-attribute 'fringe nil
@@ -424,7 +431,8 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
   ;; powerline separator anti-aliasing
-  (setq powerline-default-separator 'utf-8)
+  (when (string-equal system-type "darwin")
+    (setq powerline-default-separator 'utf-8))
   (spaceline-compile)
 
   ;; latex setting
@@ -579,6 +587,9 @@ you should place your code here."
                                                      (org-agenda-skip-entry-if 'todo '("AIRBORNE" "RUNWAY"))))
                       (org-agenda-overriding-header "Projects / Tasks in the HANGER:"))))
            ((org-agenda-compact-blocks t)))))
+
+  ;; react
+  (add-hook 'react-mode-hook 'rainbow-mode)
 
   ;; company mode fix
   (with-eval-after-load 'company
