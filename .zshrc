@@ -128,3 +128,6 @@ export PATH="/usr/local/opt/node@6/bin:$PATH"
 
 
 source "/Users/Zekun/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
+
+export PATH="/User/Zekun/.local/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"

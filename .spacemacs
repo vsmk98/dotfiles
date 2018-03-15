@@ -591,6 +591,29 @@ you should place your code here."
   ;; react
   (add-hook 'react-mode-hook 'rainbow-mode)
 
+
+  ;; autopep8
+  (defcustom python-autopep8-path (executable-find "autopep8")
+    "autopep8 executable path."
+    :group 'python
+    :type 'string)
+
+  (defun python-autopep8 ()
+    "Automatically formats Python code to conform to the PEP 8 style guide.
+$ autopep8 --in-place --aggressive --aggressive <filename>"
+    (interactive)
+    (when (eq major-mode 'python-mode)
+      (shell-command
+       (format "%s --in-place --aggressive --ignore=E501 %s" python-autopep8-path
+               (shell-quote-argument (buffer-file-name))))
+      (revert-buffer t t t)))
+
+  (bind-key "C-c C-a" 'python-autopep8)
+
+  (eval-after-load 'python
+    '(if python-autopep8-path
+         (add-hook 'after-save-hook 'python-autopep8)))
+
   ;; company mode fix
   (with-eval-after-load 'company
     (define-key company-active-map (kbd "C-f") nil))
