@@ -131,3 +131,12 @@ source "/Users/Zekun/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
 
 export PATH="/User/Zekun/.local/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+export PATH=$PATH:/Users/Zekun/prog/quorum/build/bin
+
+alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
