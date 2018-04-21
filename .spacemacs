@@ -576,14 +576,33 @@ you should place your code here."
           subtree-end
         nil)))
 
+  (defun channing/archive-when-done ()
+    "Archive current entry if it is marked as DONE"
+    (when (org-entry-is-done-p)
+      (org-archive-subtree-default)))
+
+  (add-hook 'org-after-todo-state-change-hook
+            'channing/archive-when-done)
+
+  (setq org-default-priority ?C)
+
+  (setq org-agenda-clockreport-parameter-plist
+        (quote (:link t :maxlevel 7 :fileskip0 t :compact t :narrow 80 :formula %)))
+
   (setq org-agenda-custom-commands
-        '(("d" "Daily agenda and all TODOs"
-           ((tags "PRIORITY=\"A\""
+        '(
+          ("d" "Daily agenda and all TODOs"
+           (
+            (tags "PRIORITY=\"A\""
                   ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                    (org-agenda-overriding-header "High-priority Projects / Tasks:")))
+            (tags "PRIORITY=\"B\""
+                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                   (org-agenda-overriding-header "Clocked Tasks:")))
             (tags "TODO=\"AIRBORNE\""
                   ((org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)
-                                                  (air-org-skip-subtree-if-priority ?A)))
+                                                  (air-org-skip-subtree-if-priority ?A)
+                                                  (air-org-skip-subtree-if-priority ?B)))
                    (org-agenda-overriding-header "AIRBORNE Projects:")))
             (agenda "" ((org-agenda-ndays 1)))
             (tags "TODO=\"RUNWAY\""
@@ -595,8 +614,21 @@ you should place your code here."
                                                      (air-org-skip-subtree-if-priority ?A)
                                                      (org-agenda-skip-if nil '(scheduled deadline))
                                                      (org-agenda-skip-entry-if 'todo '("AIRBORNE" "RUNWAY"))))
-                      (org-agenda-overriding-header "Projects / Tasks in the HANGER:"))))
-           ((org-agenda-compact-blocks t)))))
+                      (org-agenda-overriding-header "Projects / Tasks in the HANGER:")))
+            )
+           ((org-agenda-compact-blocks nil)))
+          ("w" "Weekly review"
+           agenda ""
+           ((org-agenda-span 'week)
+            (org-agenda-start-on-weekday 0)
+            (org-agenda-start-with-log-mode t)
+            (org-agenda-archives-mode t)
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'nottodo 'done))
+            ))
+          )
+        )
+  (setq org-agenda-block-separator (string-to-char " "))
 
   ;; react
   (add-hook 'react-mode-hook 'rainbow-mode)
