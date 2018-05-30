@@ -1,3 +1,5 @@
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -118,7 +120,7 @@ source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # yeah! no termius or any that kind of bullshit..
 nx() {
-    #do things with parameters like $1 such as
+    # do things with parameters like $1 such as
     # ssh "azureuser@quorumnx$1.southeastasia.cloudapp.azure.com"
     sshpass -p sYner#@123987 ssh "azureuser@quorumnx$1.southeastasia.cloudapp.azure.com"
 }
@@ -140,3 +142,10 @@ export PATH=$PATH:/Users/Zekun/prog/quorum/build/bin
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
 export PATH="/usr/local/sbin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+alias blink='mosh -p 22002 —-ssh="ssh -i ~/.ssh/blink" root@128.199.120.105'
+
+function gmt() {
+    git checkout --theirs $1
+    git add $1
+}
